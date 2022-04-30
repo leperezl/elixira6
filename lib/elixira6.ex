@@ -1,4 +1,4 @@
-defmodule Prime do
+defmodule Image do
   import Mogrify
 
   def resize(imagePath, width, height, opts \\ [path: "./Fotos/processed.jpeg"]) do
