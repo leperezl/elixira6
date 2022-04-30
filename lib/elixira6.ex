@@ -1,18 +1,13 @@
 defmodule Elixira6 do
-  @moduledoc """
-  Documentation for `Elixira6`.
-  """
+  import Mogrify
 
-  @doc """
-  Hello world.
+  def resize(imagePath, width, height, opts \\ [path: "C:/Users/User/Desktop/Uniandes/Semestre 8/Concurrencia, paralelismo/elixira6/Fotos"]) do
+  open(imagePath)
+  |> resize_to_limit(~s(#{width}x#{height}))
+  |> save(opts)
+  end
 
-  ## Examples
-
-      iex> Elixira6.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  def test do
+    System.cmd("cmd.exe", ["magick", "mogrify", "-resize", "20x20", "-write", "C:/Users/User/Desktop/Uniandes/Semestre 8/Concurrencia, paralelismo/elixira6/Fotos/example.jpg", "C:/Users/User/Desktop/Uniandes/Semestre 8/Concurrencia, paralelismo/elixira6/Fotos/image.jpeg"], [stderr_to_stdout: true])
   end
 end
