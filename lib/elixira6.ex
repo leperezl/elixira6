@@ -12,7 +12,11 @@ defmodule Image do
   end
 
   def linux_test do
+<<<<<<< HEAD
     open("./Fotos/image.jpeg") |> resize_to_limit("3x3") |> custom("colorspace", "Gray") |> save([path: "./Fotos/resized3.txt"])
+=======
+    open("./Fotos/image.jpeg") |> resize_to_limit("10x10") |> custom("colorspace", "Gray") |> save([path: "./Fotos/resized3.txt"])
+>>>>>>> 867dad6464c8b694f0a8046681376d79944c1080
   end
 
   def process_file do
@@ -24,7 +28,8 @@ defmodule Image do
   def process([h | t], list) do
     cond do
       Enum.at(String.split(h, "gray", trim: true),1) != nil and Enum.at(String.split(h, "gray", trim: true),1) != [] ->
-        val = 9-trunc(Float.floor(10*String.to_integer(Enum.at(String.split(Enum.at(String.split(Enum.at(String.split(h, "gray", trim: true),1), "("),1), ")"),0))/255))
+        #val = 9-trunc(Float.floor(10*String.to_integer(Enum.at(String.split(Enum.at(String.split(Enum.at(String.split(h, "gray", trim: true),1), "("),1), ")"),0))/255))
+        val = 9-trunc(Float.floor(10*String.to_integer(Enum.at(String.split(Enum.at(String.split(h, "("),1), ")"),0))/255))
         cond do
           val < 0 ->
             list = Enum.concat(list, [0])
