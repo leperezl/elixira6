@@ -12,7 +12,7 @@ defmodule Image do
   end
 
   def linux_test do
-    open("./Fotos/image.jpeg") |> resize_to_limit("20x20") |> custom("colorspace", "Gray") |> save([path: "./Fotos/resized3.txt"])
+    open("./Fotos/image.jpeg") |> resize_to_limit("3x3") |> custom("colorspace", "Gray") |> save([path: "./Fotos/resized3.txt"])
   end
 
   def process_file do
