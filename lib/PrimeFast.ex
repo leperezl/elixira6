@@ -1,17 +1,20 @@
 defmodule Fast do
     use Application
-    alias :math, as: Math
     alias :rand, as: Rand
 
-    @matrix7x7 2785634827935482546294839851424590627421590453194
-   #only a test list
-    def start( _type, _args ) do
-      primes = 4..1000
-        |> Enum.filter( fn( x ) -> (rem x, 2) == 1 end )
-        |> Enum.filter( fn( x ) -> miller_rabin?( x, 10) == True end )
-      IO.inspect( primes, label: "Primes: ", limit: :infinity )
-   
-      { :ok, self() }
+    def main(num, acc, act) when act > 0 do
+      cond do
+        String.ends_with?(Integer.to_string(num+2),"5") -> spawn_link(fn -> main(num+4, acc, act-1) end);
+        true -> spawn_link(fn -> main(num+2, acc, act-1) end);
+      end
+      #IO.puts(num)
+      miller_rabin?(num, acc)
+    end
+
+    def main(num, acc, _act) do
+      #IO.puts(num)
+      miller_rabin?(num, acc)
+      send Process.whereis(:main), {:nonprime, num}
     end
 
     def test(num, acc) do
@@ -33,7 +36,7 @@ defmodule Fast do
          miller_rabin( n, g, s, d )
     end
    
-    def miller_rabin( n, 0, _, _ ), do: True
+    def miller_rabin( n, 0, _, _ ), do: send(Process.whereis(:main), {:prime, n})
     def miller_rabin( n, g, s, d ) do
       a = 1 + Rand.uniform( n - 3 )
       x = modular_exp( a, d, n )
@@ -44,11 +47,11 @@ defmodule Fast do
       end
     end
    
-    def miller_rabin( n, x, r ) when r <= 0, do: False
+    def miller_rabin( _n, _x, r ) when r <= 0, do: False
     def miller_rabin( n, x, r ) do
       x = modular_exp( x, 2, n )
       unless x == 1 do
-        unless x == n - 1, do: miller_rabin( n, x, r - 1 ), else: True
+        unless x == n - 1, do: miller_rabin( n, x, r - 1 ), else: send(Process.whereis(:main), {:prime, n})
       else
         False
       end
