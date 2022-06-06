@@ -45,7 +45,7 @@ defmodule Image do
     list
     IO.inspect String.to_integer(Enum.join(list))
     {:ok, file} = File.open("./Fotos/numbers.txt", [:write])
-    IO.write(file, inspect(list, limit: :infinity))
+    IO.write(file, inspect(String.to_integer(Enum.join(list)), limit: :infinity))
   end
 end
 #Enum.at(String.split(Enum.at(String.split(Enum.at(String.split(h, "gray", trim: true),1), "("),1), ")"),0)
