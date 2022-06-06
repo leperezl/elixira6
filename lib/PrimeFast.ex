@@ -1,20 +1,31 @@
 defmodule Fast do
     use Application
     alias :rand, as: Rand
+    @cores :erlang.system_info(:logical_processors_available)
+    # acc es accuracy para rabin miller
 
-    def main(num, acc, act) when act > 0 do
+
+    def main(num, acc, av) do
       cond do
-        String.ends_with?(Integer.to_string(num+2),"5") -> spawn_link(fn -> main(num+4, acc, act-1) end);
-        true -> spawn_link(fn -> main(num+2, acc, act-1) end);
+        av > 0 -> spawn_link(fn -> Fast.main(num+@cores*25000, 10, av-1) end)
+        true -> nil
       end
-      #IO.puts(num)
-      miller_rabin?(num, acc)
+      submain(num, 10, @cores*10000)
     end
 
-    def main(num, acc, _act) do
+    def submain(num, acc, act) when act > 0 do
+      miller_rabin?(num, acc)
+      cond do
+        String.ends_with?(Integer.to_string(num),"3") -> submain(num+4, acc, act-1);
+        true -> submain(num+2, acc, act-1);
+      end
+      #IO.puts(num)
+    end
+
+    def submain(num, acc, _act) do
       #IO.puts(num)
       miller_rabin?(num, acc)
-      send Process.whereis(:main), {:nonprime, num}
+      submain(num+25000*@cores*@cores, acc, @cores*10000)
     end
 
     def test(num, acc) do
