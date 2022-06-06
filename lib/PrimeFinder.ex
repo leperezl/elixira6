@@ -21,22 +21,22 @@ defmodule Prime do
         Process.register(self(), :main)
         cond do
             rem(num,2) == 0 -> cond do
-                                   String.ends_with?(Integer.to_string(num+1),"5") -> principal(num+3)
-                                   true -> principal(num+1)
+                                   String.ends_with?(Integer.to_string(num+1),"5") -> finder(num+3)
+                                   true -> finder(num+1)
                                 end
-            String.ends_with?(Integer.to_string(num),"5") -> principal(num+2)
-            true -> principal(num)
+            String.ends_with?(Integer.to_string(num),"5") -> finder(num+2)
+            true -> finder(num)
         end
     end
     
-    def principal(num) do
+    def finder(num) do
         Process.flag(:trap_exit, true)
         pid = spawn_link(fn -> Fast.main(num, 10, 40000) end)
         receive do
             {:prime, num2} -> IO.inspect {:prime,num2};if Process.alive?(pid) == true do Process.exit(pid, :kill) end;Process.unregister(:main);Process.exit(self(), :normal)
             {:nonprime, num2} -> cond do
-                                String.ends_with?(Integer.to_string(num2+2),"5") -> principal(num2+4);
-                                true -> principal(num2+2);
+                                String.ends_with?(Integer.to_string(num2+2),"5") -> finder(num2+4);
+                                true -> finder(num2+2);
                         end
         end
     end
