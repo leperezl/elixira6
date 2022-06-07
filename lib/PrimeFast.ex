@@ -6,6 +6,7 @@ defmodule Fast do
 
 
     def main(num, acc, av) do
+      #IO.inspect(@cores)
       cond do
         av > 0 -> spawn_link(fn -> Fast.main(num+@cores*25000, 10, av-1) end)
         true -> nil

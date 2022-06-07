@@ -15,19 +15,21 @@ defmodule Image do
     open("./Fotos/image.jpeg") |> resize("45x45") |> custom("colorspace", "Gray") |> save([path: "./Fotos/resized3.txt"])
   end
 
+  def image_file(path, dim) do
+    open("#{path}") |> resize("#{dim}x#{dim}") |> custom("colorspace", "Gray") |> save([path: "./Fotos/resized.txt"])
+  end
+
   def process_file do
-    {:ok, content} = File.read("./Fotos/resized3.txt")
+    {:ok, content} = File.read("./Fotos/resized.txt")
     val = String.split(content, "\n", trim: true)
-    
     process(val, [])
   end
 
   def process([h | t], list) do
-    IO.puts(h)
     cond do
       Enum.at(String.split(h, "gray", trim: true),1) != nil and Enum.at(String.split(h, "gray", trim: true),1) != [] and !String.starts_with?(h,"#")->
-        #val = 9-trunc(Float.floor(10*String.to_integer(Enum.at(String.split(Enum.at(String.split(Enum.at(String.split(h, "gray", trim: true),1), "("),1), ")"),0))/255))
-        val = 9-trunc(Float.floor(10*String.to_integer(Enum.at(String.split(Enum.at(String.split(h, "("),1), ")"),0))/255))
+        val = 9-trunc(Float.floor(10*String.to_integer(Enum.at(String.split(Enum.at(String.split(Enum.at(String.split(h, "gray", trim: true),1), "("),1), ")"),0))/255))
+        #val = 9-trunc(Float.floor(10*String.to_integer(Enum.at(String.split(Enum.at(String.split(h, "("),1), ")"),1))/255))
         cond do
           val < 0 ->
             list = Enum.concat(list, [0])
@@ -43,9 +45,12 @@ defmodule Image do
 
   def process([], list) do
     list
-    IO.inspect String.to_integer(Enum.join(list))
+    res = String.to_integer(Enum.join(list))
+    #IO.inspect String.to_integer(Enum.join(list))
     {:ok, file} = File.open("./Fotos/numbers.txt", [:write])
-    IO.write(file, inspect(String.to_integer(Enum.join(list)), limit: :infinity))
+    IO.write(file, inspect(res, limit: :infinity))
+    IO.puts(res)
+    res
   end
 end
 #Enum.at(String.split(Enum.at(String.split(Enum.at(String.split(h, "gray", trim: true),1), "("),1), ")"),0)
